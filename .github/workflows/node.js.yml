@@ -28,5 +28,5 @@ jobs:
       run: npm ci
     - name: Check correct linting
       run: npm run lint
-    - name: Execture unit tests
+    - name: Execute unit tests
       run: npm run test:unit

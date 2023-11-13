@@ -3,8 +3,15 @@
     <div class="mt-5">
       <fieldset>
         <ul class="flex flex-row flex-wrap">
-          <li v-for="organization in organizations" :key="organization" class="h-8 w-1/2">
-            <input :id="organization" type="checkBox" class="mr-3" />
+          <li v-for="organization in UNIQUE_ORGANIZATIONS" :key="organization" class="h-8 w-1/2">
+            <input
+              :id="organization"
+              v-model="selectedOrganizations"
+              type="checkbox"
+              class="mr-3"
+              :value="organization"
+              @change="selectOrganization"
+            />
             <label :for="organization">{{ organization }}</label>
           </li>
         </ul>
@@ -14,6 +21,10 @@
 </template>
 
 <script>
+import { mapState, mapActions } from 'pinia';
+
+import { useJobsStore, UNIQUE_ORGANIZATIONS } from '@/stores/jobs';
+import { useUserStore, ADD_SELECTED_ORGANIZATIONS } from '@/stores/user';
 import CollapsibleAccordion from '@/components/Shared/CollapsibleAccordion.vue';
 
 export default {
@@ -23,8 +34,17 @@ export default {
   },
   data() {
     return {
-      organizations: ['Vuetube', 'Between Vue', 'Et Vue Brute', 'Vue and a Half Men']
+      selectedOrganizations: []
     };
+  },
+  computed: {
+    ...mapState(useJobsStore, [UNIQUE_ORGANIZATIONS])
+  },
+  methods: {
+    ...mapActions(useUserStore, [ADD_SELECTED_ORGANIZATIONS]),
+    selectOrganization() {
+      this.ADD_SELECTED_ORGANIZATIONS(this.selectedOrganizations);
+    }
   }
 };
 </script>

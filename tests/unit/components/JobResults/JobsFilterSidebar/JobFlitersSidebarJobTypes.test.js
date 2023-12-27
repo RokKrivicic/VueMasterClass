@@ -5,19 +5,17 @@ import { createTestingPinia } from '@pinia/testing';
 import JobFiltersSidebarJobTypes from '@/components/JobResults/JobFiltersSidebar/JobFiltersSidebarJobTypes.vue';
 import { useJobsStore } from '@/stores/jobs';
 import { useUserStore } from '@/stores/user';
+import { useRouter } from 'vue-router';
+vi.mock('vue-router');
 
 describe('JobFiltersSidebarJobTypes', () => {
   const renderJobFiltersSidebarJobTypes = () => {
     const pinia = createTestingPinia();
     const jobStore = useJobsStore();
     const userStore = useUserStore();
-    const $router = { push: vi.fn() };
 
     render(JobFiltersSidebarJobTypes, {
       global: {
-        mocks: {
-          $router
-        },
         plugins: [pinia],
         stubs: {
           FontAwesomeIcon: true
@@ -25,7 +23,7 @@ describe('JobFiltersSidebarJobTypes', () => {
       }
     });
 
-    return { jobStore, userStore, $router };
+    return { jobStore, userStore };
   };
 
   it('renders unique list of job types from jobs', async () => {
@@ -45,6 +43,7 @@ describe('JobFiltersSidebarJobTypes', () => {
   });
   describe('when user clicks checkbox', () => {
     it('communicates that user has selected checkbox for job type', async () => {
+      useRouter.mockReturnValue({ push: vi.fn() });
       const { jobStore, userStore } = renderJobFiltersSidebarJobTypes();
       jobStore.UNIQUE_JOB_TYPES = new Set(['Full-time', 'Part-time']);
 
@@ -64,7 +63,9 @@ describe('JobFiltersSidebarJobTypes', () => {
     });
 
     it('navigates user to job results page to see fresh batch of filtered jobs', async () => {
-      const { jobStore, $router } = renderJobFiltersSidebarJobTypes();
+      const push = vi.fn();
+      useRouter.mockReturnValue({ push });
+      const { jobStore } = renderJobFiltersSidebarJobTypes();
       jobStore.UNIQUE_JOB_TYPES = new Set(['Full-time']);
 
       const button = screen.getByRole('button', {
@@ -79,7 +80,7 @@ describe('JobFiltersSidebarJobTypes', () => {
 
       await userEvent.click(fullTimeCheckbox);
 
-      expect($router.push).toHaveBeenCalledWith({ name: 'JobResults' });
+      expect(push).toHaveBeenCalledWith({ name: 'JobResults' });
     });
   });
 });

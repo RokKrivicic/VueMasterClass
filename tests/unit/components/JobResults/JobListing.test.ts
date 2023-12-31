@@ -1,12 +1,12 @@
 import { render, screen } from '@testing-library/vue';
 import { RouterLinkStub } from '@vue/test-utils';
 
+import type { Job } from '@/api/types';
 import JobListing from '@/components/JobResults/JobListing.vue';
+import { createJob } from '../../../utils/createJob';
 
 describe('JobListings', () => {
-  const createJobProps = (jobProps = {}) => ({ ...jobProps });
-
-  const renderJobListing = (jobProps) => {
+  const renderJobListing = (job: Job) => {
     render(JobListing, {
       global: {
         stubs: {
@@ -15,31 +15,27 @@ describe('JobListings', () => {
       },
       props: {
         job: {
-          title: 'Tester',
-          organization: 'Samsung',
-          locations: ['New York'],
-          minimumQualifications: ['Code'],
-          ...jobProps
+          ...job
         }
       }
     });
   };
   it('renders job title', () => {
-    const jobProps = createJobProps({ title: 'Vue Programmer' });
+    const jobProps = createJob({ title: 'Vue Programmer' });
     renderJobListing(jobProps);
 
     expect(screen.getByText('Vue Programmer')).toBeInTheDocument();
   });
 
   it('renders job organization', () => {
-    const jobProps = createJobProps({ organization: 'AirBnb' });
+    const jobProps = createJob({ organization: 'AirBnb' });
     renderJobListing(jobProps);
 
     expect(screen.getByText('AirBnb')).toBeInTheDocument();
   });
 
   it('renders job locations', () => {
-    const jobProps = createJobProps({ locations: ['Orlando', 'Jacksonville'] });
+    const jobProps = createJob({ locations: ['Orlando', 'Jacksonville'] });
     renderJobListing(jobProps);
 
     expect(screen.getByText('Orlando')).toBeInTheDocument();
@@ -47,7 +43,7 @@ describe('JobListings', () => {
   });
 
   it('renders job qualifications', () => {
-    const jobProps = createJobProps({ minimumQualifications: ['Code', 'Develop'] });
+    const jobProps = createJob({ minimumQualifications: ['Code', 'Develop'] });
     renderJobListing(jobProps);
 
     expect(screen.getByText('Code')).toBeInTheDocument();

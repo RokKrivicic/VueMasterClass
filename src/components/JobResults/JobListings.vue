@@ -36,13 +36,13 @@ import { useJobsStore } from '@/stores/jobs';
 import { useDegreesStore } from '@/stores/degrees';
 import usePreviousAndNextPages from '@/composables/usePreviousAndNextPages';
 
-const jobStore = useJobsStore();
-onMounted(jobStore.FETCH_JOBS);
+const jobsStore = useJobsStore();
+onMounted(jobsStore.FETCH_JOBS);
 
 const degreesStore = useDegreesStore();
 onMounted(degreesStore.FETCH_DEGREES);
 
-const FILTERED_JOBS = computed(() => jobStore.FILTERED_JOBS);
+const FILTERED_JOBS = computed(() => jobsStore.FILTERED_JOBS);
 
 const route = useRoute();
 const currentPage = computed(() => Number.parseInt((route.query.page as string) || '1'));

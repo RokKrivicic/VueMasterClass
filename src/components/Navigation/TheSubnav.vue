@@ -22,6 +22,6 @@ const route = useRoute();
 
 const onJobResultsPage = computed(() => route.name === 'JobResults');
 
-const jobStore = useJobsStore();
-const FILTERED_JOBS = computed(() => jobStore.FILTERED_JOBS);
+const jobsStore = useJobsStore();
+const FILTERED_JOBS = computed(() => jobsStore.FILTERED_JOBS);
 </script>

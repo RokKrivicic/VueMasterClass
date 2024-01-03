@@ -118,4 +118,28 @@ describe('getters', () => {
       expect(result).toBe(true);
     });
   });
+
+  describe('INCLUDE_JOB_BY_DEGREE', () => {
+    describe('when the user has not selected any degrees', () => {
+      it('includes job', () => {
+        const userStore = useUserStore();
+        userStore.selectedDegrees = [];
+        const store = useJobsStore();
+        const job = createJob();
+
+        const result = store.INCLUDE_JOB_BY_DEGREE(job);
+        expect(result).toBe(true);
+      });
+    });
+
+    it('identifies if job is asociated with given degrees', () => {
+      const userStore = useUserStore();
+      userStore.selectedDegrees = ['Associate'];
+      const store = useJobsStore();
+      const job = createJob({ degree: 'Associate' });
+
+      const result = store.INCLUDE_JOB_BY_DEGREE(job);
+      expect(result).toBe(true);
+    });
+  });
 });
